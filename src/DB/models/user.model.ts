@@ -1,9 +1,31 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../../DB/connection.ts";
 
-const User = sequelize.define(
+// Define the attributes interface
+export interface UserAttributes {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  address: string;
+  phone_number: string;
+  role: "CUSTOMER" | "ADMIN";
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+// For creation, id is optional (auto-generated)
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'isActive' | 'isDeleted' | 'role'> {}
+
+// Extend the Model class with our types
+const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
   "User",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -35,6 +57,16 @@ const User = sequelize.define(
       type: DataTypes.ENUM("CUSTOMER", "ADMIN"),
       allowNull: false,
     },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     tableName: "User",
@@ -42,5 +74,7 @@ const User = sequelize.define(
     underscored: true,
   },
 );
+
+
 
 export default User;

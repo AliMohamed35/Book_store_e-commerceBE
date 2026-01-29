@@ -1,5 +1,5 @@
 import express, { type Application } from "express";
-import logger from "./logs/logger.ts";
+import logger from "./utils/logs/logger.ts";
 import bootstrap from "./app.controller.ts";
 
 

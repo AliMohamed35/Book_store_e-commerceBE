@@ -1,14 +1,29 @@
+import cookieParser from "cookie-parser";
 import sequelize, { connectDB } from "./DB/connection.ts";
 import * as models from "./DB/index.ts"
+import { errorHandler } from "./ExceptionHandler/ErrorHandler.ts";
+import { userRouter } from "./modules/index.ts";
 
 function bootstrap(app: any, express: any): void{
-    // parse data from request body
+    // Parse data from request body
     app.use(express.json());
 
-    // to connect database
+    // To connect database
     connectDB();
 
+    // Sync models to database
     sequelize.sync()
+
+    
+    // Cookies
+    app.use(cookieParser());
+    
+    // Routes
+    app.use("/user",userRouter)
+    
+    // Global error handler
+    app.use(errorHandler);
+
 }
 
 export default bootstrap;
