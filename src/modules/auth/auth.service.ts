@@ -3,7 +3,7 @@ import { BadRequestError, InvalidCredentialsError, ResourceNotFoundError, UserAl
 import { comparePassword, hashPassword } from "../../utils/hash/hash.ts";
 import { generateJWT } from "../../utils/jwt/jwt.ts";
 import logger from "../../utils/logs/logger.ts";
-import { CreateUserDTO, LoginDTO, LoginResponseDTO, UserResponseDTO } from "../users/user.dto.ts";
+import { CreateUserDTO, LoginDTO, LoginResponseDTO, LogoutDTO, UserResponseDTO } from "../users/user.dto.ts";
 
 export class UserService{
     async register (userData: CreateUserDTO): Promise<UserResponseDTO> {
@@ -47,16 +47,37 @@ export class UserService{
         if(!comparedPassword) throw new InvalidCredentialsError();
         existingUser.set("isActive", true);
 
+        const token = generateJWT(user.id);
+
         // Save user record
         await existingUser.save();
 
-        const token = generateJWT(user.id);
+        logger.info(`Logged in user: ${userData.email}`)
+
 
         return {
             email: user.email,
             token
         }
 
+    }
+
+    async logout (email: string): Promise<LogoutDTO>{
+        const existingUser = await User.findOne({where: {email}});
+
+        if(!existingUser){
+            throw new ResourceNotFoundError("User Not found!");
+        }
+
+        existingUser.set("isActive", false);
+
+        await existingUser.save();
+
+        logger.info(`Logged out user: ${email}`)
+
+        return{
+            email
+        }
     }
 }
 

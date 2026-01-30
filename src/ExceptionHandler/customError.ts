@@ -6,7 +6,7 @@ export class ResourceNotFoundError extends Error {
 
 export class UserAlreadyExistError extends Error {
     constructor(message = "User Already exist!"){
-        super(message);
+        super(message)
     }
 }
 

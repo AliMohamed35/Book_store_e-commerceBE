@@ -4,11 +4,14 @@ import sequelize from "../../DB/connection.ts";
 const Order = sequelize.define(
   "Order",
   {
-    user_id:{
-        type: DataTypes.INTEGER,
-        allowNull: false
-    }
-    ,
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    cart_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     status: {
       type: DataTypes.ENUM("PENDING", "ON_THE_WAY", "DELIVERED"),
       allowNull: false,

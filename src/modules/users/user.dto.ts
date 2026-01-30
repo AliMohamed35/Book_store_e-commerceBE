@@ -12,6 +12,10 @@ export interface UserResponseDTO{
     address: string,
 }
 
+export interface LogoutDTO{
+    email: string,
+}
+
 export interface LoginResponseDTO{
     email: string,
     token: string

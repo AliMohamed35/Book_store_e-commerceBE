@@ -10,10 +10,16 @@ const Book = sequelize.define(
     },
     description: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
     },
+    stock:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   },
   {
     tableName: "Book",

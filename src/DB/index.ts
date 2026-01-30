@@ -3,7 +3,6 @@ import Book from "../DB/models/book.model.ts"
 import Order from "../DB/models/orders_model.ts"
 import OrderItem from "../DB/models/order_item.ts"
 
-
 User.hasMany(Order, { foreignKey: "user_id", onDelete: "CASCADE" });
 Order.belongsTo(User, { foreignKey: "user_id" });
 
