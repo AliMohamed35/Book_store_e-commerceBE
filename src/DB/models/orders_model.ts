@@ -8,9 +8,17 @@ const Order = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    cart_id: {
+    book_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
+    },
+    quantity:{
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    price_at_purchase:{
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     status: {
       type: DataTypes.ENUM("PENDING", "ON_THE_WAY", "DELIVERED"),

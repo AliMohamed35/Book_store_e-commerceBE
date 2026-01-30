@@ -1,10 +1,9 @@
-// import { Router } from "express";
-// import { userController } from "../auth/auth.controller.ts";
+import { Router } from "express";
+import { orderController } from "./order.controller.ts";
+import { auth } from "../../middlewares/auth/auth.middleware.ts";
 
-// export const router = Router();
+export const router = Router();
 
-// router.post("/register", userController.register);
-// router.post("/login", userController.login);
-// router.post("/logout", userController.logout);
+router.post("/order-book/:id", auth, orderController.placeOrder);
 
-// export default router;
+export default router;

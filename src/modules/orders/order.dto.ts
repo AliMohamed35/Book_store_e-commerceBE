@@ -1,6 +1,18 @@
+export enum OrderStatus{
+    PENDING = "Pending",
+    COMPLETED = "Completed",
+}
 export interface OrderResponseDTO{
-    order_id: number,
+    user_id: number,
     book_id: number,
+    status: OrderStatus
     quantity: number,
-    price_at_purchase: number
+    priceAtPurchase: number
+}
+
+export interface CreateOrderDTO{
+    user_id: number,
+    book_id: number,
+    status: OrderStatus
+    quantity: number,
 }
