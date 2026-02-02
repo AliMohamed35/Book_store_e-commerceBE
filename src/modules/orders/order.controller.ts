@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { Request, NextFunction, Response } from "express";
 import { AuthRequest } from "../../middlewares/auth/auth.middleware";
 import { parseId } from "../../utils/parse/parseId";
 import { orderService } from "./order.service";
@@ -10,11 +10,38 @@ export class OrderController {
       const bookdId = parseId(req.params.id); // bookId
       const orderData = req.body;
 
-      const placedOrder = await orderService.placeOrder(userId, bookdId, orderData);
+      const placedOrder = await orderService.placeOrder(
+        userId,
+        bookdId,
+        orderData,
+      );
 
-      return res.status(200).json({message: "Order placed successfully!" , success: true, data: placedOrder})
+      return res
+        .status(200)
+        .json({
+          message: "Order placed successfully!",
+          success: true,
+          data: placedOrder,
+        });
     } catch (error) {
-        next(error);
+      next(error);
+    }
+  }
+
+  async deleteOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const deletedOrder = await orderService.deleteOrder(parseId(id));
+
+      return res
+        .status(200)
+        .json({
+          message: "order deleted successfully!",
+          success: true,
+          data: deletedOrder,
+        });
+    } catch (error) {
+      next(error);
     }
   }
 }

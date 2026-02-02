@@ -1,11 +1,45 @@
 import { Router } from "express";
-import { userController } from "../users/user.controller.ts";
 import { auth } from "../../middlewares/auth/auth.middleware.ts";
+import {
+  joiResetPassword,
+  joiUserSchema,
+  validate,
+} from "../../middlewares/validation/joi.ts";
+import { userController } from "../users/user.controller.ts";
 
 export const router = Router();
 
-router.post("/register", userController.register);
+// AUTH ROUTES
+router.post("/register", validate(joiUserSchema), userController.register);
 router.post("/login", userController.login);
-router.post("/logout", auth, userController.logout);
+router.post("/logout", async (req, res, next) => {
+  try {
+    const result = await userController.logout(req, res, next);
+
+    // Clear cookies on logout
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    return result;
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post(
+  "/reset-password",
+  auth,
+  validate(joiResetPassword),
+  userController.resetPassword,
+);
+
+// CRUDS
+router.post("/soft-delete/:id", auth, userController.softDelete);
+router.delete("/delete-user/:id", auth, userController.deleteUser);
+router.get("/:id", auth, userController.getUserById);
+router.get("/", auth, userController.getAllUsers);
+
+// update all user
+router.put("/update-user", auth, userController.updateAllUserField);
 
 export default router;
