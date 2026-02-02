@@ -25,3 +25,15 @@ export interface LoginDTO{
     email: string,
     password: string
 }
+
+export interface DeleteDTO{
+    email: string
+}
+
+export interface UpdatedDTO{
+    name: string,
+    email: string,
+    password: string,
+    address: string,
+    phone_number: string,
+}
