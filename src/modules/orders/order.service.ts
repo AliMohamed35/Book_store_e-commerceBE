@@ -30,6 +30,16 @@ export class OrderService {
       priceAtPurchase: existingBook.getDataValue("price") * orderData.quantity,
     };
   }
+
+  async deleteOrder(id: number): Promise<number>{
+    const existingOrder = await Order.findByPk(id);
+
+    if(!existingOrder) throw new ResourceNotFoundError("Order doesn't exist!");
+
+    existingOrder.destroy();
+
+    return id;
+  }
 }
 
 export const orderService = new OrderService();

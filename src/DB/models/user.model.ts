@@ -12,10 +12,14 @@ export interface UserAttributes {
   role: "CUSTOMER" | "ADMIN";
   isActive: boolean;
   isDeleted: boolean;
+  refreshToken: string | null
 }
 
 // For creation, id is optional (auto-generated)
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'isActive' | 'isDeleted' | 'role'> {}
+export interface UserCreationAttributes extends Optional<
+  UserAttributes,
+  "id" | "isActive" | "isDeleted" | "role"
+> {}
 
 // Extend the Model class with our types
 const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
@@ -67,6 +71,10 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
       allowNull: false,
       defaultValue: false,
     },
+    refreshToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: "User",
@@ -74,7 +82,5 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
     underscored: true,
   },
 );
-
-
 
 export default User;

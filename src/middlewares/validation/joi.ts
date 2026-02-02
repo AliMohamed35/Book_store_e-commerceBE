@@ -1,0 +1,77 @@
+import { NextFunction, Request, Response } from "express";
+import joi, { ObjectSchema } from "joi";
+
+export const validate =
+  (schema: ObjectSchema, property: "body" | "params" | "query" = "body") =>
+  (req: Request, res: Response, next: NextFunction) => {
+    const { error, value } = schema.validate(req[property], {
+      abortEarly: true,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation Error!",
+        errors: error.details.map((d) => d.message),
+      });
+    }
+
+    req[property] = value;
+    next();
+  };
+
+export const joiUserSchema = joi.object({
+  name: joi.string().min(3).max(20).required(),
+
+  email: joi
+    .string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
+
+  password: joi
+    .string()
+    .pattern(
+      new RegExp(
+        "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?!.*\\s).{3,30}$",
+      ),
+    )
+    .required()
+    .messages({
+      "string.pattern.base":
+        "Password must contain at least one uppercase letter, one special character, and no spaces",
+    }),
+
+  address: joi.string().max(50).required(),
+
+  phone_number: joi.string().min(8).max(15),
+
+  role: joi.string().valid("CUSTOMER", "ADMIN").required(),
+});
+
+export const joiResetPassword = joi.object({
+  password: joi
+    .string()
+    .pattern(
+      new RegExp(
+        "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?!.*\\s).{3,30}$",
+      ),
+    )
+    .required()
+    .messages({
+      "string.pattern.base":
+        "Password must contain at least one uppercase letter, one special character, and no spaces",
+    }),
+
+  newPassword: joi
+    .string()
+    .pattern(
+      new RegExp(
+        "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?!.*\\s).{3,30}$",
+      ),
+    )
+    .required()
+    .messages({
+      "string.pattern.base":
+        "Password must contain at least one uppercase letter, one special character, and no spaces",
+    }),
+});
