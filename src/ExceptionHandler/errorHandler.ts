@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { BadRequestError, InvalidCredentialsError, ResourceNotFoundError, UserAlreadyExistError } from "./customError.ts";
+import { BadRequestError, EmailSendError, InvalidCredentialsError, ResourceNotFoundError, UserAlreadyExistError } from "./customError.ts";
 import logger from "../utils/logs/logger.ts";
 
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction)=>{
@@ -17,6 +17,10 @@ export const errorHandler = (error: Error, req: Request, res: Response, next: Ne
 
     if(error instanceof BadRequestError){
         return res.status(400).json({message:"Bad Request!", success: false, error: error.message});
+    }
+
+    if(error instanceof EmailSendError){
+        return res.status(400).json({message:"Email not sent!", success: false, error: error.message});
     }
 
     logger.error(`${error.name}: ${error.message}`);

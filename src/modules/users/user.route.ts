@@ -12,6 +12,7 @@ export const router = Router();
 // AUTH ROUTES
 router.post("/register", validate(joiUserSchema), userController.register);
 router.post("/login", userController.login);
+router.post("/verify", userController.verifyUser);
 router.post("/logout", async (req, res, next) => {
   try {
     const result = await userController.logout(req, res, next);
@@ -36,8 +37,8 @@ router.post(
 // CRUDS
 router.post("/soft-delete/:id", auth, userController.softDelete);
 router.delete("/delete-user/:id", auth, userController.deleteUser);
-router.get("/:id", auth, userController.getUserById);
 router.get("/", auth, userController.getAllUsers);
+router.get("/:id", auth, userController.getUserById);
 
 // update all user
 router.put("/update-user", auth, userController.updateAllUserField);

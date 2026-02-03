@@ -134,12 +134,14 @@ export class UserController {
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await userService.getAllUsers();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 1;
 
+      const result = await userService.getAllUsers(page, limit);
       return res.status(200).json({
-        message: "User retrieved successfully",
+        message: "Users retrieved successfully",
         success: true,
-        data: users,
+        data: result,
       });
     } catch (error) {
       next(error);
@@ -210,6 +212,21 @@ export class UserController {
         success: true,
         message: "Token refreshed successfully",
         accessToken: tokens.accessToken,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async verifyUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email, otp } = req.body;
+      const verifiedUser = await userService.verifyUser(email, otp);
+
+      return res.status(200).json({
+        message: "User verified successfully",
+        success: true,
+        data: verifiedUser,
       });
     } catch (error) {
       next(error);

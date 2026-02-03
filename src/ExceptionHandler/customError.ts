@@ -21,3 +21,9 @@ export class BadRequestError extends Error {
         super(message);
     }
 }
+
+export class EmailSendError extends Error {
+    constructor(message = "Email not sent!"){
+        super(message);
+    }
+}
