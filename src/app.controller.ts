@@ -1,30 +1,33 @@
 import cookieParser from "cookie-parser";
 import sequelize, { connectDB } from "./DB/connection.ts";
-import * as models from "./DB/index.ts"
+import * as models from "./DB/index.ts";
 import { errorHandler } from "./ExceptionHandler/ErrorHandler.ts";
 import { bookRouter, orderRouter, userRouter } from "./modules/index.ts";
+import { limiter } from "./utils/limiter/limiter.ts";
 
-function bootstrap(app: any, express: any): void{
-    // Parse data from request body
-    app.use(express.json());
+function bootstrap(app: any, express: any): void {
+  // Rate limiter
+  app.use(limiter);
 
-    // To connect database
-    connectDB();
+  // Parse data from request body
+  app.use(express.json());
 
-    // Sync models to database
-    sequelize.sync()
+  // To connect database
+  connectDB();
 
-    // Cookies
-    app.use(cookieParser());
-    
-    // Routes
-    app.use("/user", userRouter)
-    app.use("/book", bookRouter)
-    app.use("/order", orderRouter)
-    
-    // Global error handler
-    app.use(errorHandler);
+  // Sync models to database
+  sequelize.sync();
 
+  // Cookies
+  app.use(cookieParser());
+
+  // Routes
+  app.use("/users", userRouter);
+  app.use("/book", bookRouter);
+  app.use("/order", orderRouter);
+
+  // Global error handler
+  app.use(errorHandler);
 }
 
 export default bootstrap;

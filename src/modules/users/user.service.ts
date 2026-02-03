@@ -1,6 +1,7 @@
 import User, { UserAttributes } from "../../DB/models/user.model.ts";
 import {
   BadRequestError,
+  EmailSendError,
   InvalidCredentialsError,
   ResourceNotFoundError,
   UserAlreadyExistError,
@@ -12,6 +13,8 @@ import {
   verifyRefreshToken,
 } from "../../utils/jwt/jwt.ts";
 import logger from "../../utils/logs/logger.ts";
+import { getOTPEmailTemplate, sendMail } from "../../utils/mail/sendMail.ts";
+import { generateOTP } from "../../utils/otp/generateOTP.ts";
 import {
   CreateUserDTO,
   DeleteDTO,
@@ -38,13 +41,39 @@ export class UserService {
     // Hash password
     const hashedPassword = await hashPassword(userData.password);
 
+    // generate OTP
+    const { otp } = generateOTP();
+
     // Convert to entity >> DB
     const newUser = await User.create({
       ...userData,
       password: hashedPassword,
       isActive: false,
       isDeleted: false,
+      otp,
+      isVerified: false,
     });
+
+    try {
+      if (userData.email) {
+        const emailHTML = getOTPEmailTemplate(otp);
+        await sendMail(
+          userData.email,
+          "Verify Your Email -OTP code",
+          emailHTML,
+        );
+        logger.info(`OTP email sent to: ${userData.email}`);
+      }
+    } catch (error) {
+      // Rollback: Delete the created user
+      await newUser.destroy();
+      logger.error(
+        `Failed to send OTP email. User registration rolled back: ${userData.email}`,
+      );
+      throw new EmailSendError(
+        "Registration failed: Unable to send verification email. Please try again.",
+      );
+    }
 
     logger.info(`User created: ${newUser}`);
 
@@ -71,6 +100,10 @@ export class UserService {
     );
 
     if (!comparedPassword) throw new InvalidCredentialsError();
+
+    if (user.isVerified === false)
+      throw new BadRequestError("Please verify you email first!");
+
     if (existingUser.getDataValue("isDeleted") === true)
       existingUser.set("isDeleted", false);
     existingUser.set("isActive", true);
@@ -103,7 +136,7 @@ export class UserService {
     }
 
     existingUser.set("isActive", false);
-    existingUser.set("refreshToken", null);  // Clear refresh token
+    existingUser.set("refreshToken", null); // Clear refresh token
 
     await existingUser.save();
 
@@ -128,6 +161,8 @@ export class UserService {
     existingUser.set("isActive", false);
     await existingUser.save();
 
+    logger.info(`soft deleted user: ${existingUser}`);
+
     return {
       email: existingUser.getDataValue("email"),
     };
@@ -141,6 +176,8 @@ export class UserService {
     }
 
     await existingUser.destroy();
+
+    logger.info(`deleted user: ${existingUser}`);
   }
 
   async getUserById(id: number): Promise<UserResponseDTO> {
@@ -157,18 +194,30 @@ export class UserService {
     };
   }
 
-  async getAllUsers(): Promise<UserAttributes[]> {
-    const users = await User.findAll({
-      raw: true,
-      attributes: { exclude: ["password"] },
-    });
+  async getAllUsers(page: number = 1, limit: number = 10) {
+    const offset = (page - 1) * limit;
 
-    if (users.length === 0) {
-      throw new ResourceNotFoundError("No users found in the database!");
+    const {count, rows} = await User.findAndCountAll({
+      limit: limit,
+      offset: offset,
+      attributes: {exclude: ["password", "refreshToken", "otp"]},
+      order: [["createdAt", "DESC"]],
+    })
+    if(rows.length === 0){
+      throw new ResourceNotFoundError("No users found in database");
     }
 
-    // return users.map(user => user.toJSON() as UserAttributes);
-    return users as unknown as UserAttributes[];
+    return {
+      data: rows,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(count / limit),
+        totalItems: count,
+        itemsPerPage: limit,
+        hasNextPage: page < Math.ceil(count / limit),
+        hasPrevPage: page > 1,
+      },
+    };
   }
 
   async updateAllUserField(
@@ -184,6 +233,7 @@ export class UserService {
     }
 
     existingUser.update(userData);
+    logger.info(`updated user: ${existingUser}`);
 
     return {
       name: existingUser.getDataValue("name"),
@@ -266,6 +316,26 @@ export class UserService {
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
+    };
+  }
+
+  async verifyUser(email: string, otp: number): Promise<UserResponseDTO> {
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (!existingUser) throw new ResourceNotFoundError("User doesn't exist!");
+
+    if (existingUser.getDataValue("otp") !== otp) {
+      throw new BadRequestError("OTP doesn't match!");
+    }
+
+    existingUser.set("isVerified", true);
+    existingUser.set("otp", null);
+    await existingUser.save();
+
+    return {
+      name: existingUser.getDataValue("name"),
+      email,
+      address: existingUser.getDataValue("address"),
     };
   }
 }

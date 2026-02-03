@@ -12,7 +12,9 @@ export interface UserAttributes {
   role: "CUSTOMER" | "ADMIN";
   isActive: boolean;
   isDeleted: boolean;
-  refreshToken: string | null
+  refreshToken: string | null,
+  otp: number | null,
+  isVerified: boolean
 }
 
 // For creation, id is optional (auto-generated)
@@ -75,6 +77,15 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    otp:{
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    isVerified: {
+      type : DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   },
   {
     tableName: "User",
