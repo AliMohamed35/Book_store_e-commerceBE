@@ -13,19 +13,7 @@ export const router = Router();
 router.post("/register", validate(joiUserSchema), userController.register);
 router.post("/login", userController.login);
 router.post("/verify", userController.verifyUser);
-router.post("/logout", async (req, res, next) => {
-  try {
-    const result = await userController.logout(req, res, next);
-
-    // Clear cookies on logout
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
-
-    return result;
-  } catch (error) {
-    next(error);
-  }
-});
+router.post("/logout", auth,  userController.logout);
 
 router.post(
   "/reset-password",

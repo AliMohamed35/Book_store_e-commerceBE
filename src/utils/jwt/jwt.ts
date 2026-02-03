@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 const ACCESS_TOKEN_SECRET: string = "secretkeyforjwt";
 const REFRESH_TOKEN_SECRET: string = "secretkeyforrefreshjwt";
 
-const ACCESS_TOKEN_EXPIRY = '15m';
+const ACCESS_TOKEN_EXPIRY = '1m';
 const REFRESH_TOKEN_EXPIRY = '7d';
 
 

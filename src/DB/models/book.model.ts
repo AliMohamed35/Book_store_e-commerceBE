@@ -1,6 +1,14 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../DB/connection.ts";
 
+export interface BookAttributes{
+  id: number,
+  bookName: string,
+  description: string,
+  price: number,
+  stock: number
+}
+
 const Book = sequelize.define(
   "Book",
   {

@@ -8,7 +8,5 @@ export const limiter = rateLimit({
       throw new Error("rate limit exceeded");
     },
     skipSuccessfulRequests: true,
-    keyGenerator: (req: Request) => {
-      return req.ip || "unknown"; // device ip
-    },
+
   });

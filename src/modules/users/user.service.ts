@@ -135,6 +135,10 @@ export class UserService {
       throw new ResourceNotFoundError("User Not found!");
     }
 
+    if(existingUser.getDataValue("isActive") === false){
+      throw new BadRequestError("User already logged out!")
+    }
+
     existingUser.set("isActive", false);
     existingUser.set("refreshToken", null); // Clear refresh token
 
@@ -199,7 +203,7 @@ export class UserService {
 
     const {count, rows} = await User.findAndCountAll({
       limit: limit,
-      offset: offset,
+      offset,
       attributes: {exclude: ["password", "refreshToken", "otp"]},
       order: [["createdAt", "DESC"]],
     })

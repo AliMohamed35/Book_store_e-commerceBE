@@ -10,3 +10,17 @@ export interface CreateBookDTO{
     price: number,
     stock: number
 }
+
+export interface UpdateBookDTO{
+    book_name: string,
+    description: string,
+    price: number,
+    stock: number
+}
+
+export interface BookResponseDTO{
+    book_name: string,
+    description: string,
+    price: number,
+    stock: number
+}
