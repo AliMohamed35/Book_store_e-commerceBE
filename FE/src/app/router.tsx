@@ -2,10 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 
 import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
+import LoginPage from "../features/auth/pages/LoginPage";
+import RegisterPage from "../features/auth/pages/RegisterPage";
 
 // We'll add these as we create them:
-// import LoginPage from '../features/auth/pages/LoginPage';
-// import RegisterPage from '../features/auth/pages/RegisterPage';
 // import BooksPage from '../features/books/pages/BooksPage';
 // import BookDetailPage from '../features/books/pages/BookDetailPage';
 // import CartPage from '../features/cart/pages/CartPage';
@@ -17,8 +17,8 @@ export const router = createBrowserRouter([
     element: <HomePage />,
   },
   // Auth routes
-  // { path: '/login', element: <LoginPage /> },
-  // { path: '/register', element: <RegisterPage /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
 
   // Books routes
   // { path: '/books', element: <BooksPage /> },
@@ -29,8 +29,8 @@ export const router = createBrowserRouter([
   // { path: '/orders', element: <OrdersPage /> },
 
   // 404 catch-all (must be last)
-   {
-    path: '*',
+  {
+    path: "*",
     element: <NotFoundPage />,
   },
 ]);

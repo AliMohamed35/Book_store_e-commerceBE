@@ -7,8 +7,6 @@ import type {
   MessageResponse 
 } from './types';
 
-// Based on your BE routes: /register, /login, /verify, /logout
-
 export const authApi = {
   // POST /users/register
   register: async (data: RegisterRequest): Promise<MessageResponse> => {
