@@ -20,6 +20,7 @@ export interface RegisterRequest {
   password: string;
   address: string;
   phone_number: string;
+  role: 'CUSTOMER' | 'ADMIN';
 }
 
 export interface VerifyOtpRequest {

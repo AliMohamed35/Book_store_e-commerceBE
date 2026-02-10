@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import logger from "../utils/logs/logger.ts";
+import { logger } from "../utils/logs/logger";
 
 const sequelize = new Sequelize("book_store", "root","", {
   dialect: "mysql",

@@ -1,6 +1,6 @@
 import express, { type Application } from "express";
-import logger from "./utils/logs/logger.ts";
 import bootstrap from "./app.controller.ts";
+import { logger } from "./utils/logs/logger.ts";
 
 
 const app: Application = express();

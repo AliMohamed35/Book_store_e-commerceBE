@@ -12,7 +12,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../../utils/jwt/jwt.ts";
-import logger from "../../utils/logs/logger.ts";
+import { logger } from "../../utils/logs/logger.ts";
 import { getOTPEmailTemplate, sendMail } from "../../utils/mail/sendMail.ts";
 import { generateOTP } from "../../utils/otp/generateOTP.ts";
 import {
