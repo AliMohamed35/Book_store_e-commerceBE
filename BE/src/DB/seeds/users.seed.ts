@@ -65,4 +65,4 @@ function generateUsers(count: number): UserCreationAttributes[] {
   return users;
 }
 
-export const userSeeds = generateUsers(100);
+export const userSeeds = generateUsers(10);

@@ -6,7 +6,7 @@ import {
   ResourceNotFoundError,
   UserAlreadyExistError,
 } from "./customError.ts";
-import logger from "../utils/logs/logger.ts";
+import { logger } from "../utils/logs/logger.ts";
 
 export const errorHandler = (
   error: Error,

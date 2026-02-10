@@ -5,8 +5,19 @@ import { errorHandler } from "./ExceptionHandler/ErrorHandler.ts";
 import { bookRouter, orderRouter, userRouter } from "./modules/index.ts";
 import { limiter } from "./utils/limiter/limiter.ts";
 import { Request, Response } from "express";
+import cors from "cors";
 
 function bootstrap(app: any, express: any): void {
+  // cors
+  app.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
+
   // Rate limiter
   app.use(limiter);
 
@@ -24,7 +35,7 @@ function bootstrap(app: any, express: any): void {
 
   // Route to test health
   app.get("/health", (req: Request, res: Response) =>
-    res.status(200).json({ message: "Healthy", timestamp: Date.now() })
+    res.status(200).json({ message: "Healthy", timestamp: Date.now() }),
   );
 
   // Routes

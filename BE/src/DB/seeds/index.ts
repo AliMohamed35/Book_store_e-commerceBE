@@ -1,11 +1,12 @@
 import sequelize from "../connection.ts";
-import logger from "../../utils/logs/logger.ts";
+
 import User from "../models/user.model.ts";
 import Book from "../models/book.model.ts";
 import Order from "../models/orders_model.ts";
 import { userSeeds } from "./users.seed.ts";
 import { bookSeeds } from "./books.seed.ts";
 import { orderSeeds } from "./orders.seed.ts";
+import { logger } from "../../utils/logs/logger.ts";
 
 async function seed() {
   try {

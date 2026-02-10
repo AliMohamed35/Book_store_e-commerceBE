@@ -1,6 +1,6 @@
 import Book, { BookAttributes } from "../../DB/models/book.model";
 import { ResourceNotFoundError } from "../../ExceptionHandler/customError";
-import logger from "../../utils/logs/logger";
+import { logger } from "../../utils/logs/logger";
 import {
   BookCreatingResponseDTO,
   BookResponseDTO,

@@ -45,7 +45,7 @@ export const joiUserSchema = joi.object({
 
   phone_number: joi.string().min(8).max(15),
 
-  role: joi.string().valid("CUSTOMER", "ADMIN").required(),
+  role: joi.string().valid("CUSTOMER", "ADMIN").default("CUSTOMER"),
 });
 
 export const joiResetPassword = joi.object({

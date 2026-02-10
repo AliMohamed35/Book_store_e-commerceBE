@@ -11,6 +11,7 @@ export const registerSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
   address: z.string().min(5, 'Address must be at least 5 characters'),
   phone_number: z.string().min(10, 'Phone number must be at least 10 digits'),
+  role: z.enum(["CUSTOMER", "ADMIN"])
 })
 
 export type LoginFormData = z.infer<typeof loginSchema>;
