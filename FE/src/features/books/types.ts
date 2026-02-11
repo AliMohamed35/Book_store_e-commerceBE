@@ -8,6 +8,7 @@ export interface Book {
 
 export interface BookState {
   book: Book | null;
+  books: Book[];
   isLoading: boolean;
   error: string | null;
 }

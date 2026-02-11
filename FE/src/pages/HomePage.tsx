@@ -1,4 +1,5 @@
 import Categories from "../components/Categories";
+import Deals from "../components/Deals";
 import Hero from "../components/Hero";
 
 const HomePage = () => {
@@ -6,6 +7,7 @@ const HomePage = () => {
     <>
     <Hero/>
     <Categories/>
+    <Deals/>
     </>
   );
 };

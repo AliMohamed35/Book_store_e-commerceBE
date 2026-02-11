@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
+import BooksPage from "../features/books/pages/Books";
 
 export const router = createBrowserRouter([
   // Auth routes - NO header/layout
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       // Add other protected routes here
-      // { path: "books", element: <BooksPage /> },
+      { path: "books", element: <BooksPage /> },
       // { path: "books/:id", element: <BookDetailsPage /> },
     ],
   },

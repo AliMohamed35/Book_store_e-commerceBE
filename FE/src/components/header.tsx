@@ -26,7 +26,7 @@ const Header = () => {
     <header className="p-4 md:p-5 shadow-md bg-white sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="text-2xl md:text-4xl font-bold text-blue-500">
+        <Link to="/" className="text-2xl md:text-4xl font-bold text-[oklch(0.41_0.11_231.91)]">
           Jenova
         </Link>
 
